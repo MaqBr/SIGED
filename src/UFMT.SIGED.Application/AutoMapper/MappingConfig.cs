@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using UFMT.SIGED.Application.ViewModels;
 using UFMT.SIGED.Domain.Entity;
 
-namespace UFMT.SIGED.Application.Mapper
+namespace UFMT.SIGED.Application
 {
     public static class MappingConfig
     {

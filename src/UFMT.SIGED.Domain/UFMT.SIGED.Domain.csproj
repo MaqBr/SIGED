@@ -45,10 +45,10 @@
     <Compile Include="Interfaces\Repository\IRepository.cs" />
     <Compile Include="Interfaces\Repository\INivelEnsinoRepository.cs" />
     <Compile Include="Interfaces\Repository\IUsuarioRepository.cs" />
+    <Compile Include="Interfaces\Services\INivelEnsinoService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\NivelEnsinoService.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Interfaces\Services\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

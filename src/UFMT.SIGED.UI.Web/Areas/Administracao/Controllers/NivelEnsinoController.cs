@@ -17,28 +17,26 @@ using System.Threading;
 using PagedList;
 using PagedList.Mvc;
 using UFMT.SIGED.UI.Web.Filtros;
+using UFMT.SIGED.Application.Interfaces;
 
 namespace Areas.Administracao.Controllers
 {
     [AutorizacaoUsuarioFilter]
     public class NivelEnsinoController : Controller
     {
-        private SIGEDContext context = new SIGEDContext();
+        private readonly INivelEnsinoAppService _nivelEnsinoAppService;
 
-        private readonly NivelEnsinoRepository _repository;
-        private readonly UnitOfWork _uow;
         private const int pageSize = 10;
 
-        public NivelEnsinoController()
+        public NivelEnsinoController(INivelEnsinoAppService nivelEnsinoAppService)
         {
-            _repository = new NivelEnsinoRepository(context);
-            _uow = new UnitOfWork(context);
+            _nivelEnsinoAppService = nivelEnsinoAppService;
         }
 
         public ActionResult DetalheNivelEnsinoEstudante()
         {
             var estudanteNivelEnsino =
-                _repository
+                _nivelEnsinoAppService
                 .ObterPorId(1);
 
             var vm = new EstudanteNivelEnsinoViewModel
@@ -57,7 +55,7 @@ namespace Areas.Administracao.Controllers
 
         public ActionResult ObterMaiorNivelEnsino()
         {
-            var vm = _repository.ObterTodos().AsQueryable()
+            var vm = _nivelEnsinoAppService.ObterTodos().AsQueryable()
                 .ProjectTo<NivelDeEnsinoViewModel>()
                 .FirstOrDefault();
             return PartialView("_ObterMaiorNivelEnsino", vm);
@@ -68,26 +66,22 @@ namespace Areas.Administracao.Controllers
         {
             //Sleep de 5 segundos apenas para visualizar o loading
             //Não adicionar em produção
-            Thread.Sleep(5000);
+            //Thread.Sleep(5000);
 
             int pageNumber = pagina ?? 1;
 
-            var niveisEnsino = _repository
+            var vm = _nivelEnsinoAppService
                 .ObterTodos();
 
             if (!String.IsNullOrWhiteSpace(criterio))
             {
 
-                niveisEnsino =
-                        _repository
+                vm =  _nivelEnsinoAppService
                         .Buscar(e =>
                                 e.Descricao.ToUpper()
                                 .Contains(criterio.ToUpper())
                                );
             }
-
-            var vm = niveisEnsino.AsQueryable()
-                .ProjectTo<NivelDeEnsinoViewModel>();
 
             return PartialView("_ObterTodos", vm.OrderBy(x => x.Descricao)
                 .ToPagedList(pageNumber, pageSize));
@@ -98,15 +92,14 @@ namespace Areas.Administracao.Controllers
         {
             #region erro de lógica
 
-            string[] nomes = new string[] { "Marcio", "Guilherme" };
-            string nome = nomes[2];
+            ////string[] nomes = new string[] { "Marcio", "Guilherme" };
+            ////string nome = nomes[2];
 
             #endregion
 
             int pageNumber = pagina ?? 1;
 
-            var vm = _repository.ObterTodos().AsQueryable()
-                .ProjectTo<NivelDeEnsinoViewModel>();
+            var vm = _nivelEnsinoAppService.ObterTodos();
 
             return View(vm.OrderBy(x=>x.Descricao)
                 .ToPagedList(pageNumber, pageSize));
@@ -114,13 +107,9 @@ namespace Areas.Administracao.Controllers
 
         public ActionResult Details(int? id)
         {
-            var nivelEnsino = 
-                _repository
-                .ObterPorId(id.GetValueOrDefault());
-
             var vm =
-                Mapper.Map<NivelEnsino,
-                NivelDeEnsinoViewModel>(nivelEnsino);
+                _nivelEnsinoAppService
+                .ObterPorId(id.GetValueOrDefault());
 
             return PartialView("_Details", vm);
         }
@@ -139,19 +128,11 @@ namespace Areas.Administracao.Controllers
 
             //Sleep de 5 segundos apenas para visualizar o loading
             //Não adicionar em produção
-            Thread.Sleep(5000);
+            //Thread.Sleep(5000);
 
             if (ModelState.IsValid)
             {
-                _uow.BeginTransaction();
-
-                var nivelEnsino =
-                    Mapper.Map<AdicionarNivelEnsinoViewModel,
-                    NivelEnsino>(nivelEnsinoVM);
-
-                _repository.Adicionar(nivelEnsino);
-                _uow.Commit();
-
+                _nivelEnsinoAppService.Adicionar(nivelEnsinoVM);
                 return ObterTodos();
             }
 
@@ -162,15 +143,11 @@ namespace Areas.Administracao.Controllers
         public ActionResult Edit(int? id)
         {
 
-            var nivelEnsino = 
-                _repository
+            var vm =
+                _nivelEnsinoAppService
                 .ObterPorId(id.GetValueOrDefault());
 
-            var vm =
-                Mapper.Map<NivelEnsino,
-                AtualizarNivelEnsinoViewModel>(nivelEnsino);
-
-
+  
             return PartialView("_Edit", vm);
         }
 
@@ -181,19 +158,11 @@ namespace Areas.Administracao.Controllers
         {
             //Sleep de 5 segundos apenas para visualizar o loading
             //Não adicionar em produção
-            Thread.Sleep(5000);
+            //Thread.Sleep(5000);
 
             if (ModelState.IsValid)
             {
-                _uow.BeginTransaction();
-
-                var nivelEnsino =
-                    Mapper.Map<AtualizarNivelEnsinoViewModel,
-                    NivelEnsino>(nivelEnsinoVM);
-
-                _repository.Atualizar(nivelEnsino);
-                _uow.Commit();
-
+                _nivelEnsinoAppService.Atualizar(nivelEnsinoVM);
                 return ObterTodos();
             }
             return PartialView("_Edit", nivelEnsinoVM);
@@ -201,13 +170,9 @@ namespace Areas.Administracao.Controllers
 
         public ActionResult Delete(int? id)
         {
-            var nivelEnsino =
-                _repository
-                .ObterPorId(id.GetValueOrDefault());
-
             var vm =
-                Mapper.Map<NivelEnsino,
-                NivelDeEnsinoViewModel>(nivelEnsino);
+                _nivelEnsinoAppService
+                .ObterPorId(id.GetValueOrDefault());
 
             return PartialView("_Delete", vm);
         }
@@ -218,21 +183,14 @@ namespace Areas.Administracao.Controllers
         {
             //Sleep de 5 segundos apenas para visualizar o loading
             //Não adicionar em produção
-            Thread.Sleep(5000);
-
-            _uow.BeginTransaction();
-            _repository.Remover(id);
-            _uow.Commit();
-
-            var vm = _repository.ObterTodos().AsQueryable()
-                .ProjectTo<NivelDeEnsinoViewModel>();
+            //Thread.Sleep(5000);
+            _nivelEnsinoAppService.Remover(id);
             return ObterTodos();
         }
 
         public ActionResult ObterTodos()
         {
-            var vm = _repository.ObterTodos().AsQueryable()
-            .ProjectTo<NivelDeEnsinoViewModel>();
+            var vm = _nivelEnsinoAppService.ObterTodos();
 
             return PartialView("_ObterTodos", vm.OrderBy(x => x.Descricao)
                     .ToPagedList(1, pageSize));

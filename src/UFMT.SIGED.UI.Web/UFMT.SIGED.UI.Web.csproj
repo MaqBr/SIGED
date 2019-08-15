@@ -59,6 +59,15 @@
     <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
       <HintPath>..\..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
     </Reference>
+    <Reference Include="SimpleInjector, Version=3.1.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SimpleInjector.3.1.0\lib\net45\SimpleInjector.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleInjector.Integration.Web, Version=3.1.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SimpleInjector.Integration.Web.3.1.0\lib\net40\SimpleInjector.Integration.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleInjector.Integration.Web.Mvc, Version=3.1.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SimpleInjector.Integration.Web.Mvc.3.1.0\lib\net40\SimpleInjector.Integration.Web.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -111,6 +120,9 @@
     <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="WebActivator, Version=1.4.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\WebActivator.1.4.4\lib\net40\WebActivator.dll</HintPath>
     </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
@@ -197,6 +209,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\SimpleInjectorInitializer.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\Administracao\AdministracaoAreaRegistration.cs" />
     <Compile Include="Areas\Administracao\Controllers\AceTemplateAdmin\BaseController.cs" />
@@ -211,11 +224,9 @@
     <Compile Include="Areas\Administracao\Controllers\AceTemplateAdmin\WidgetsController.cs" />
     <Compile Include="Areas\Administracao\Controllers\HomeController.cs" />
     <Compile Include="Areas\Administracao\Extensions\HtmlRequestHelper.cs" />
-    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AutenticacaoController.cs" />
     <Compile Include="Areas\Administracao\Controllers\EstudanteController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Areas\Administracao\Controllers\NivelEnsinoController.cs" />
     <Compile Include="Filtros\AutorizacaoUsuarioFilterAttribute.cs" />
     <Compile Include="Global.asax.cs">
@@ -540,6 +551,10 @@
     <ProjectReference Include="..\UFMT.SIGED.Infra.Data\UFMT.SIGED.Infra.Data.csproj">
       <Project>{ebe6b362-cb6f-4341-a529-7b6a07b37ec5}</Project>
       <Name>UFMT.SIGED.Infra.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UFMT.SIGED.Infra.IoC\UFMT.SIGED.Infra.IoC.csproj">
+      <Project>{379CF93C-3162-42B5-848F-92976E94A5DE}</Project>
+      <Name>UFMT.SIGED.Infra.IoC</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using UFMT.SIGED.Application.Mapper;
+using UFMT.SIGED.Application;
 
 namespace UFMT.SIGED.UI.Web
 {
